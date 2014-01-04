@@ -1,68 +1,124 @@
 package com.androidexample.gpsbasics;
 
+import java.net.URI;
+import java.util.List;
+
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.Toast;
-import android.app.Activity;
-import android.content.Context;
-
 
 public class GpsBasicsAndroidExample extends Activity implements LocationListener {
 
+	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
+			.create("http://gpstracker.herokuapp.com/location/list");
+
 	private LocationManager locationManager;
-	
+	private GpsTrackerDatabase database;
+	private Button startBtn;
+	private Button stopBtn;
+	private Button uploadBtn;
+	private Button clearBtn;
+	private GpsLocationUploader uploader;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_gps_basics_android_example);
-		
-		/********** get Gps location service LocationManager object ***********/
+
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		
-		/*
-		  Parameters :
-		     First(provider)    :  the name of the provider with which to register 
-		     Second(minTime)    :  the minimum time interval for notifications, in milliseconds. This field is only used as a hint to conserve power, and actual time between location updates may be greater or lesser than this value. 
-		     Third(minDistance) :  the minimum distance interval for notifications, in meters 
-		     Fourth(listener)   :  a {#link LocationListener} whose onLocationChanged(Location) method will be called for each location update 
-        */
-		
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				3000,   // 3 sec
-				10, this);
-		
-		/********* After registration onLocationChanged method called periodically after each 3 sec ***********/
+		database = new GpsTrackerDatabase();
+		uploader = new GpsLocationUploader(SERVER_LOCATION_UPLOAD_URL);
+
+		initButtonListeners();
 	}
-	
-	/************* Called after each 3 sec **********/
+
+	private void initButtonListeners() {
+		startBtn = (Button) findViewById(R.id.startButton);
+		startBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15,
+						GpsBasicsAndroidExample.this);
+				showMessage("Tracking started");
+			}
+		});
+
+		stopBtn = (Button) findViewById(R.id.stopButton);
+		stopBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				locationManager.removeUpdates(GpsBasicsAndroidExample.this);
+				showMessage("Tracking stopped");
+			}
+		});
+
+		uploadBtn = (Button) findViewById(R.id.uploadButton);
+		uploadBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				uploadLocations();
+			}
+		});
+
+		clearBtn = (Button) findViewById(R.id.clearButton);
+		clearBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				database.clear();
+				showMessage("Database cleared successfully");
+			}
+		});
+	}
+
+	private void uploadLocations() {
+		List<GpsLocation> locations = database.getLocations();
+		boolean uploadedSuccessfully = uploader.upload(locations);
+		if (uploadedSuccessfully) {
+			database.clear();
+			showMessage("Tracking data uploaded successfully");
+		} else {
+			showMessage("Cannot upload tracking data");
+		}
+	}
+
 	@Override
 	public void onLocationChanged(Location location) {
-		   
-		String str = "Latitude: "+location.getLatitude()+" \nLongitude: "+location.getLongitude();
-		Toast.makeText(getBaseContext(), str, Toast.LENGTH_LONG).show();
+		database.saveLocation(location);
+		showLocationMessage(location);
+	}
+
+	private void showLocationMessage(Location location) {
+		showMessage("Latitude: " + location.getLatitude() + " \nLongitude: "
+				+ location.getLongitude());
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		
-		/******** Called when User off Gps *********/
-		
-		Toast.makeText(getBaseContext(), "Gps turned off ", Toast.LENGTH_LONG).show();
+		showMessage("GPS turned off");
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		
-		/******** Called when User on Gps  *********/
-		
-		Toast.makeText(getBaseContext(), "Gps turned on ", Toast.LENGTH_LONG).show();
+		showMessage("GPS turned on");
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	private void showMessage(String message) {
+		Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
 	}
 }
