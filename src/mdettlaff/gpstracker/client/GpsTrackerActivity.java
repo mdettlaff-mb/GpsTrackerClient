@@ -38,11 +38,11 @@ public class GpsTrackerActivity extends Activity {
 		uploader = context.getUploader();
 		listener = new GpsTrackerListener(database);
 
-		initButtonListeners();
+		initButtons();
 		initTracking();
 	}
 
-	private void initButtonListeners() {
+	private void initButtons() {
 		startBtn = (Button) findViewById(R.id.startButton);
 		startBtn.setEnabled(!context.isTrackingEnabled());
 		startBtn.setOnClickListener(new OnClickListener() {
@@ -97,9 +97,11 @@ public class GpsTrackerActivity extends Activity {
 			public void onClick(View view) {
 				int locationsCount = database.getLocations().size();
 				StringBuilder message = new StringBuilder();
-				message.append("Number of locations to upload: " + locationsCount + "\n");
-				message.append("Tracking is "
-						+ (context.isTrackingEnabled() ? "enabled" : "disabled"));
+				message.append("Number of locations to upload: ");
+				message.append(locationsCount);
+				message.append('\n');
+				message.append("Tracking is ");
+				message.append(context.isTrackingEnabled() ? "enabled" : "disabled");
 				showMessage(message.toString());
 			}
 		});
@@ -130,9 +132,9 @@ public class GpsTrackerActivity extends Activity {
 
 	private void uploadLocations() {
 		if (database.hasLocations()) {
-			GpsLocationUploaderTask uploadTask = new GpsLocationUploaderTask(uploader, database,
+			GpsLocationUploaderTask uploaderTask = new GpsLocationUploaderTask(uploader, database,
 					this);
-			uploadTask.execute();
+			uploaderTask.execute();
 		} else {
 			showMessage("No tracking data to upload");
 		}
