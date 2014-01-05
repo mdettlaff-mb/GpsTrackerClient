@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 public class GpsTrackerActivity extends Activity {
 
-	private static final int GPS_MIN_TIME_IN_MILLIS = 5000;
+	private static final int GPS_MIN_TIME_IN_MILLIS = 3000;
 	private static final int GPS_MIN_DISTANCE_IN_METERS = 15;
 
 	private LocationManager locationManager;
