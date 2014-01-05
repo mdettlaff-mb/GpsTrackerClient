@@ -6,9 +6,9 @@ import android.os.AsyncTask;
 
 public class GpsLocationUploaderTask extends AsyncTask<Void, Long, String> {
 
-	private GpsLocationUploader uploader;
-	private GpsTrackerActivity activity;
-	private GpsTrackerDatabase database;
+	private final GpsLocationUploader uploader;
+	private final GpsTrackerDatabase database;
+	private final GpsTrackerActivity activity;
 
 	public GpsLocationUploaderTask(GpsLocationUploader uploader, GpsTrackerDatabase database,
 			GpsTrackerActivity activity) {

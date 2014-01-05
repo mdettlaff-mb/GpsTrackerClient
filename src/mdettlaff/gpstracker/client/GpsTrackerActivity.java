@@ -1,11 +1,7 @@
 package mdettlaff.gpstracker.client;
 
-import java.net.URI;
-
 import android.app.Activity;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
@@ -13,17 +9,17 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class GpsTrackerActivity extends Activity implements LocationListener {
+public class GpsTrackerActivity extends Activity {
 
 	private static final int GPS_MIN_TIME_IN_MILLIS = 5000;
 	private static final int GPS_MIN_DISTANCE_IN_METERS = 15;
-	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
-			.create("http://gpstrackerserver.herokuapp.com/location/list");
-	// .create("http://10.0.3.2:8080/location/list");
 
 	private LocationManager locationManager;
+	private GpsTrackerApplication application;
 	private GpsTrackerDatabase database;
 	private GpsLocationUploader uploader;
+	private GpsTrackerListener listener;
+
 	private Button startBtn;
 	private Button stopBtn;
 	private Button uploadBtn;
@@ -37,38 +33,41 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 		setContentView(R.layout.activity_gps_tracker);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		database = new GpsTrackerDatabase();
-		uploader = new GpsLocationUploader(SERVER_LOCATION_UPLOAD_URL);
+		application = (GpsTrackerApplication) getApplicationContext();
+		database = application.getDatabase();
+		uploader = application.getUploader();
+		listener = new GpsTrackerListener(database);
 
 		initButtonListeners();
+		initTracking();
 	}
 
 	private void initButtonListeners() {
 		startBtn = (Button) findViewById(R.id.startButton);
+		startBtn.setEnabled(!application.isTrackingEnabled());
 		startBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-				locationManager
-						.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-								GPS_MIN_TIME_IN_MILLIS, GPS_MIN_DISTANCE_IN_METERS,
-								GpsTrackerActivity.this);
-				showMessage("Tracking started");
+				startTracking();
+				application.setTrackingEnabled(true);
 				startBtn.setEnabled(false);
 				stopBtn.setEnabled(true);
+				showMessage("Tracking started");
 			}
 		});
 
 		stopBtn = (Button) findViewById(R.id.stopButton);
-		stopBtn.setEnabled(false);
+		stopBtn.setEnabled(application.isTrackingEnabled());
 		stopBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-				locationManager.removeUpdates(GpsTrackerActivity.this);
-				showMessage("Tracking stopped");
+				stopTracking();
+				application.setTrackingEnabled(false);
 				startBtn.setEnabled(true);
 				stopBtn.setEnabled(false);
+				showMessage("Tracking stopped");
 			}
 		});
 
@@ -97,9 +96,36 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 			@Override
 			public void onClick(View view) {
 				int locationsCount = database.getLocations().size();
-				showMessage("Number of locations to upload: " + locationsCount);
+				StringBuilder message = new StringBuilder();
+				message.append("Number of locations to upload: " + locationsCount + "\n");
+				message.append("Tracking is "
+						+ (application.isTrackingEnabled() ? "enabled" : "disabled"));
+				showMessage(message.toString());
 			}
 		});
+	}
+
+	private void initTracking() {
+		if (application.isTrackingEnabled()) {
+			startTracking();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (application.isTrackingEnabled()) {
+			stopTracking();
+		}
+	}
+
+	private void startTracking() {
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+				GPS_MIN_TIME_IN_MILLIS, GPS_MIN_DISTANCE_IN_METERS, listener);
+	}
+
+	private void stopTracking() {
+		locationManager.removeUpdates(listener);
 	}
 
 	private void uploadLocations() {
@@ -110,31 +136,6 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 		} else {
 			showMessage("No tracking data to upload");
 		}
-	}
-
-	@Override
-	public void onLocationChanged(Location location) {
-		database.saveLocation(location);
-		showLocationMessage(location);
-	}
-
-	private void showLocationMessage(Location location) {
-		showMessage("Latitude: " + location.getLatitude() + " \nLongitude: "
-				+ location.getLongitude());
-	}
-
-	@Override
-	public void onProviderDisabled(String provider) {
-		showMessage("GPS turned off");
-	}
-
-	@Override
-	public void onProviderEnabled(String provider) {
-		showMessage("GPS turned on");
-	}
-
-	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
 	void showMessage(String message) {
