@@ -1,4 +1,4 @@
-package com.androidexample.gpsbasics;
+package mdettlaff.gpstracker.client;
 
 import java.net.URI;
 import java.util.List;

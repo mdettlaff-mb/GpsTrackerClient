@@ -1,4 +1,4 @@
-package com.androidexample.gpsbasics;
+package mdettlaff.gpstracker.client;
 
 import java.util.List;
 
@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 public class GpsLocationUploaderTask extends AsyncTask<Void, Long, String> {
 
 	private GpsLocationUploader uploader;
-	private GpsBasicsAndroidExample activity;
+	private GpsTrackerActivity activity;
 	private GpsTrackerDatabase database;
 
 	public GpsLocationUploaderTask(GpsLocationUploader uploader, GpsTrackerDatabase database,
-			GpsBasicsAndroidExample activity) {
+			GpsTrackerActivity activity) {
 		this.uploader = uploader;
 		this.database = database;
 		this.activity = activity;

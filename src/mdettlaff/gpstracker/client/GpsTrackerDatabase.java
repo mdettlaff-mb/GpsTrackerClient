@@ -1,4 +1,4 @@
-package com.androidexample.gpsbasics;
+package mdettlaff.gpstracker.client;
 
 import java.util.ArrayList;
 import java.util.Date;

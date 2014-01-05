@@ -1,6 +1,8 @@
-package com.androidexample.gpsbasics;
+package mdettlaff.gpstracker.client;
 
 import java.net.URI;
+
+import com.androidexample.gpsbasics.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class GpsBasicsAndroidExample extends Activity implements LocationListener {
+public class GpsTrackerActivity extends Activity implements LocationListener {
 
 	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
 	// .create("http://gpstracker.herokuapp.com/location/list");
@@ -48,7 +50,7 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 			@Override
 			public void onClick(View view) {
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15,
-						GpsBasicsAndroidExample.this);
+						GpsTrackerActivity.this);
 				showMessage("Tracking started");
 				startBtn.setEnabled(false);
 				stopBtn.setEnabled(true);
@@ -61,7 +63,7 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 
 			@Override
 			public void onClick(View view) {
-				locationManager.removeUpdates(GpsBasicsAndroidExample.this);
+				locationManager.removeUpdates(GpsTrackerActivity.this);
 				showMessage("Tracking stopped");
 				startBtn.setEnabled(true);
 				stopBtn.setEnabled(false);
