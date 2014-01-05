@@ -2,8 +2,6 @@ package mdettlaff.gpstracker.client;
 
 import java.net.URI;
 
-import com.androidexample.gpsbasics.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -34,7 +32,7 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_gps_basics_android_example);
+		setContentView(R.layout.activity_gps_tracker);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		database = new GpsTrackerDatabase();
