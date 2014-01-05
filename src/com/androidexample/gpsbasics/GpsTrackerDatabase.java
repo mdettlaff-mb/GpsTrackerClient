@@ -33,4 +33,8 @@ public class GpsTrackerDatabase {
 	public List<GpsLocation> getLocations() {
 		return locations;
 	}
+
+	public boolean hasLocations() {
+		return !locations.isEmpty();
+	}
 }

@@ -1,7 +1,6 @@
 package com.androidexample.gpsbasics;
 
 import java.net.URI;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,15 +16,16 @@ import android.widget.Toast;
 public class GpsBasicsAndroidExample extends Activity implements LocationListener {
 
 	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
-			.create("http://gpstracker.herokuapp.com/location/list");
+	// .create("http://gpstracker.herokuapp.com/location/list");
+			.create("http://10.0.3.2:8080/location/list");
 
 	private LocationManager locationManager;
 	private GpsTrackerDatabase database;
+	private GpsLocationUploader uploader;
 	private Button startBtn;
 	private Button stopBtn;
 	private Button uploadBtn;
 	private Button clearBtn;
-	private GpsLocationUploader uploader;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +83,12 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 	}
 
 	private void uploadLocations() {
-		List<GpsLocation> locations = database.getLocations();
-		boolean uploadedSuccessfully = uploader.upload(locations);
-		if (uploadedSuccessfully) {
-			database.clear();
-			showMessage("Tracking data uploaded successfully");
+		if (database.hasLocations()) {
+			GpsLocationUploaderTask uploadTask = new GpsLocationUploaderTask(uploader, database,
+					this);
+			uploadTask.execute();
 		} else {
-			showMessage("Cannot upload tracking data");
+			showMessage("No tracking data to upload");
 		}
 	}
 
@@ -118,7 +117,7 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
-	private void showMessage(String message) {
+	void showMessage(String message) {
 		Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
 	}
 }
