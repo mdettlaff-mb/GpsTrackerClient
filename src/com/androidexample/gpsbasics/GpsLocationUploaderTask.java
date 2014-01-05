@@ -4,7 +4,7 @@ import java.util.List;
 
 import android.os.AsyncTask;
 
-public class GpsLocationUploaderTask extends AsyncTask<Void, Long, Boolean> {
+public class GpsLocationUploaderTask extends AsyncTask<Void, Long, String> {
 
 	private GpsLocationUploader uploader;
 	private GpsBasicsAndroidExample activity;
@@ -18,19 +18,27 @@ public class GpsLocationUploaderTask extends AsyncTask<Void, Long, Boolean> {
 	}
 
 	@Override
-	protected Boolean doInBackground(Void... args) {
-		List<GpsLocation> locations = database.getLocations();
-		boolean uploadedSuccessfully = uploader.upload(locations);
-		return uploadedSuccessfully;
+	protected String doInBackground(Void... args) {
+		String errorMessage = null;
+		try {
+			List<GpsLocation> locations = database.getLocations();
+			boolean uploadedSuccessfully = uploader.upload(locations);
+			if (!uploadedSuccessfully) {
+				errorMessage = "Cannot upload tracking data";
+			}
+		} catch (Exception e) {
+			errorMessage = "Cannot upload tracking data (" + e + ")";
+		}
+		return errorMessage;
 	}
 
 	@Override
-	protected void onPostExecute(Boolean uploadedSuccessfully) {
-		if (uploadedSuccessfully) {
+	protected void onPostExecute(String errorMessage) {
+		if (errorMessage == null) {
 			database.clear();
 			activity.showMessage("Tracking data uploaded successfully");
 		} else {
-			activity.showMessage("Cannot upload tracking data");
+			activity.showMessage(errorMessage);
 		}
 	}
 }

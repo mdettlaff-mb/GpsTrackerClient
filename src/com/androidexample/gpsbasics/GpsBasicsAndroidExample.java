@@ -26,6 +26,7 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 	private Button stopBtn;
 	private Button uploadBtn;
 	private Button clearBtn;
+	private Button infoBtn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +50,21 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15,
 						GpsBasicsAndroidExample.this);
 				showMessage("Tracking started");
+				startBtn.setEnabled(false);
+				stopBtn.setEnabled(true);
 			}
 		});
 
 		stopBtn = (Button) findViewById(R.id.stopButton);
+		stopBtn.setEnabled(false);
 		stopBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
 				locationManager.removeUpdates(GpsBasicsAndroidExample.this);
 				showMessage("Tracking stopped");
+				startBtn.setEnabled(true);
+				stopBtn.setEnabled(false);
 			}
 		});
 
@@ -78,6 +84,16 @@ public class GpsBasicsAndroidExample extends Activity implements LocationListene
 			public void onClick(View view) {
 				database.clear();
 				showMessage("Database cleared successfully");
+			}
+		});
+
+		infoBtn = (Button) findViewById(R.id.infoButton);
+		infoBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				int locationsCount = database.getLocations().size();
+				showMessage("Number of locations to upload: " + locationsCount);
 			}
 		});
 	}

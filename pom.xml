@@ -47,7 +47,7 @@
 				<artifactId>android-maven-plugin</artifactId>
 				<configuration>
 					<sdk>
-						<!-- platform or api level (api level 8 = platform 2.2)-->
+						<!-- platform or API level (API level 8 = platform 2.2) -->
 						<platform>${platform.version}</platform>
 					</sdk>
 					<undeployBeforeDeploy>true</undeployBeforeDeploy>
