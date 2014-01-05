@@ -4,7 +4,7 @@ import java.net.URI;
 
 import android.app.Application;
 
-public class GpsTrackerApplication extends Application {
+public class GpsTrackerContext extends Application {
 
 	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
 			.create("http://gpstrackerserver.herokuapp.com/location/list");
@@ -15,7 +15,7 @@ public class GpsTrackerApplication extends Application {
 
 	private boolean trackingEnabled;
 
-	public GpsTrackerApplication() {
+	public GpsTrackerContext() {
 		database = new GpsTrackerDatabase();
 		uploader = new GpsLocationUploader(SERVER_LOCATION_UPLOAD_URL);
 	}
