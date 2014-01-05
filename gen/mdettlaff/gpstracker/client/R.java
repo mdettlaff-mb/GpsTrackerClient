@@ -14,8 +14,9 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int clearButton=0x7f060004;
-        public static final int infoButton=0x7f060003;
+        public static final int clearButton=0x7f060005;
+        public static final int infoButton=0x7f060004;
+        public static final int mapButton=0x7f060003;
         public static final int startButton=0x7f060000;
         public static final int stopButton=0x7f060001;
         public static final int uploadButton=0x7f060002;
@@ -25,8 +26,9 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
-        public static final int clear_tracking_data=0x7f040005;
-        public static final int show_info=0x7f040004;
+        public static final int clear_tracking_data=0x7f040006;
+        public static final int show_info=0x7f040005;
+        public static final int show_map=0x7f040004;
         public static final int start_tracking=0x7f040001;
         public static final int stop_tracking=0x7f040002;
         public static final int upload_tracking_data=0x7f040003;

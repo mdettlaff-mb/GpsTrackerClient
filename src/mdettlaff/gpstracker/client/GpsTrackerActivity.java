@@ -2,7 +2,9 @@ package mdettlaff.gpstracker.client;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +25,7 @@ public class GpsTrackerActivity extends Activity {
 	private Button startBtn;
 	private Button stopBtn;
 	private Button uploadBtn;
+	private Button mapBtn;
 	private Button clearBtn;
 	private Button infoBtn;
 
@@ -77,6 +80,17 @@ public class GpsTrackerActivity extends Activity {
 			@Override
 			public void onClick(View view) {
 				uploadLocations();
+			}
+		});
+
+		mapBtn = (Button) findViewById(R.id.mapButton);
+		mapBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Uri uri = Uri.parse(GpsTrackerContext.SERVER_BASE_URL);
+				Intent openLinkIntent = new Intent(Intent.ACTION_VIEW, uri);
+				startActivity(openLinkIntent);
 			}
 		});
 
