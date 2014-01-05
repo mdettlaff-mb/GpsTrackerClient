@@ -23,6 +23,10 @@ public class GpsTrackerDatabase {
 		result.setLatitude(original.getLatitude());
 		result.setLongitude(original.getLongitude());
 		result.setTime(new Date(original.getTime()));
+		result.setAccuracy(original.getAccuracy());
+		result.setAltitude(original.getAltitude());
+		result.setBearing(original.getBearing());
+		result.setSpeed(original.getSpeed());
 		return result;
 	}
 
