@@ -18,7 +18,7 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 	private static final int GPS_MIN_TIME_IN_MILLIS = 5000;
 	private static final int GPS_MIN_DISTANCE_IN_METERS = 15;
 	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
-			.create("http://gpstrackerclient.herokuapp.com/location/list");
+			.create("http://gpstrackerserver.herokuapp.com/location/list");
 	// .create("http://10.0.3.2:8080/location/list");
 
 	private LocationManager locationManager;
