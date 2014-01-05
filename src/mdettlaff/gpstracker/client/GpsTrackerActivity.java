@@ -15,9 +15,11 @@ import android.widget.Toast;
 
 public class GpsTrackerActivity extends Activity implements LocationListener {
 
+	private static final int GPS_MIN_TIME_IN_MILLIS = 5000;
+	private static final int GPS_MIN_DISTANCE_IN_METERS = 15;
 	private static final URI SERVER_LOCATION_UPLOAD_URL = URI
-	// .create("http://gpstracker.herokuapp.com/location/list");
-			.create("http://10.0.3.2:8080/location/list");
+			.create("http://gpstrackerclient.herokuapp.com/location/list");
+	// .create("http://10.0.3.2:8080/location/list");
 
 	private LocationManager locationManager;
 	private GpsTrackerDatabase database;
@@ -47,8 +49,10 @@ public class GpsTrackerActivity extends Activity implements LocationListener {
 
 			@Override
 			public void onClick(View view) {
-				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 15,
-						GpsTrackerActivity.this);
+				locationManager
+						.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+								GPS_MIN_TIME_IN_MILLIS, GPS_MIN_DISTANCE_IN_METERS,
+								GpsTrackerActivity.this);
 				showMessage("Tracking started");
 				startBtn.setEnabled(false);
 				stopBtn.setEnabled(true);
