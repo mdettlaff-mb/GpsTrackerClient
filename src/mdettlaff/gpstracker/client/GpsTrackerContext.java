@@ -16,7 +16,7 @@ public class GpsTrackerContext extends Application {
 	private final GpsLocationUploader uploader;
 
 	public GpsTrackerContext() {
-		database = new GpsTrackerDatabase();
+		database = new GpsTrackerDatabase(this);
 		uploader = new GpsLocationUploader(SERVER_LOCATION_UPLOAD_URL);
 	}
 

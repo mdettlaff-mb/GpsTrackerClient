@@ -124,7 +124,7 @@ public class GpsTrackerActivity extends Activity {
 
 			@Override
 			public void onClick(View view) {
-				int locationsCount = database.getLocations().size();
+				int locationsCount = database.countLocations();
 				StringBuilder message = new StringBuilder();
 				message.append("Number of locations to upload: ");
 				message.append(locationsCount);
