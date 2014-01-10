@@ -15,8 +15,6 @@ public class GpsTrackerContext extends Application {
 	private final GpsTrackerDatabase database;
 	private final GpsLocationUploader uploader;
 
-	private boolean trackingEnabled;
-
 	public GpsTrackerContext() {
 		database = new GpsTrackerDatabase();
 		uploader = new GpsLocationUploader(SERVER_LOCATION_UPLOAD_URL);
@@ -28,13 +26,5 @@ public class GpsTrackerContext extends Application {
 
 	public GpsLocationUploader getUploader() {
 		return uploader;
-	}
-
-	public boolean isTrackingEnabled() {
-		return trackingEnabled;
-	}
-
-	public void setTrackingEnabled(boolean trackingEnabled) {
-		this.trackingEnabled = trackingEnabled;
 	}
 }

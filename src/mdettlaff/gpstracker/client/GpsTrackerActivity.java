@@ -17,10 +17,10 @@ public class GpsTrackerActivity extends Activity {
 	private static final int GPS_MIN_DISTANCE_IN_METERS = 15;
 
 	private LocationManager locationManager;
-	private GpsTrackerContext context;
 	private GpsTrackerDatabase database;
 	private GpsLocationUploader uploader;
 	private GpsTrackerListener listener;
+	private GpsTrackerPreferences preferences;
 
 	private Button startBtn;
 	private Button stopBtn;
@@ -36,10 +36,11 @@ public class GpsTrackerActivity extends Activity {
 		setContentView(R.layout.activity_gps_tracker);
 
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		context = (GpsTrackerContext) getApplicationContext();
+		GpsTrackerContext context = (GpsTrackerContext) getApplicationContext();
 		database = context.getDatabase();
 		uploader = context.getUploader();
 		listener = new GpsTrackerListener(database);
+		preferences = new GpsTrackerPreferences(this);
 
 		initButtons();
 		initTracking();
@@ -47,13 +48,13 @@ public class GpsTrackerActivity extends Activity {
 
 	private void initButtons() {
 		startBtn = (Button) findViewById(R.id.startButton);
-		startBtn.setEnabled(!context.isTrackingEnabled());
+		startBtn.setEnabled(!preferences.isTrackingEnabled());
 		startBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
 				startTracking();
-				context.setTrackingEnabled(true);
+				preferences.setTrackingEnabled(true);
 				startBtn.setEnabled(false);
 				stopBtn.setEnabled(true);
 				showMessage("Tracking started");
@@ -61,13 +62,13 @@ public class GpsTrackerActivity extends Activity {
 		});
 
 		stopBtn = (Button) findViewById(R.id.stopButton);
-		stopBtn.setEnabled(context.isTrackingEnabled());
+		stopBtn.setEnabled(preferences.isTrackingEnabled());
 		stopBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
 				stopTracking();
-				context.setTrackingEnabled(false);
+				preferences.setTrackingEnabled(false);
 				startBtn.setEnabled(true);
 				stopBtn.setEnabled(false);
 				showMessage("Tracking stopped");
@@ -115,14 +116,14 @@ public class GpsTrackerActivity extends Activity {
 				message.append(locationsCount);
 				message.append('\n');
 				message.append("Tracking is ");
-				message.append(context.isTrackingEnabled() ? "enabled" : "disabled");
+				message.append(preferences.isTrackingEnabled() ? "enabled" : "disabled");
 				showMessage(message.toString());
 			}
 		});
 	}
 
 	private void initTracking() {
-		if (context.isTrackingEnabled()) {
+		if (preferences.isTrackingEnabled()) {
 			startTracking();
 		}
 	}
@@ -130,7 +131,7 @@ public class GpsTrackerActivity extends Activity {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		if (context.isTrackingEnabled()) {
+		if (preferences.isTrackingEnabled()) {
 			stopTracking();
 		}
 	}
