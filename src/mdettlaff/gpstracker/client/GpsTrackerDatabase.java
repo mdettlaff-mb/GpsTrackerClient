@@ -30,7 +30,8 @@ public class GpsTrackerDatabase {
 
 	public void saveLocation(Location location) {
 		try {
-			FileOutputStream output = context.openFileOutput(FILENAME, Context.MODE_APPEND);
+			FileOutputStream output = context.openFileOutput(FILENAME, Context.MODE_APPEND
+					| Context.MODE_WORLD_READABLE);
 			try {
 				output.write(mapper.writeValueAsBytes(convertLocation(location)));
 				output.write("\n".getBytes());
