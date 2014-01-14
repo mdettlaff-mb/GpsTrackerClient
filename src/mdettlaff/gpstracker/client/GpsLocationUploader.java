@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class GpsLocationUploader {
 
 	private final URI url;
-	private RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
 	public GpsLocationUploader(URI url) {
 		this.url = url;
