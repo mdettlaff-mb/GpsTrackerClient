@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.util.Log;
@@ -28,6 +29,8 @@ public class GpsTrackerDatabase {
 		mapper = new ObjectMapper();
 	}
 
+	@SuppressWarnings("deprecation")
+	@SuppressLint("WorldReadableFiles")
 	public void saveLocation(Location location) {
 		try {
 			FileOutputStream output = context.openFileOutput(FILENAME, Context.MODE_APPEND
